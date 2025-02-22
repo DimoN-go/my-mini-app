@@ -1,1 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бегущий человечек</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="main-menu" class="menu">
+        <h1>Бегущий человечек</h1>
+        <button id="start-button">Играть</button>
+        <p>Всего очков: <span id="total-score">0</span></p>
+    </div>
 
+    <div id="game-container" class="hidden">
+        <div id="game-header">
+            <button id="menu-button">Меню</button>
+            <p>Очки: <span id="current-score">0</span></p>
+        </div>
+        <div id="game-area">
+            <div id="runner"></div>
+            <div id="obstacle"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
