@@ -9,7 +9,8 @@
 <body>
     <div id="main-menu" class="menu">
         <h1>Бегущий человечек</h1>
-        <button id="start-button">Играть</button>
+        <button id="play-pc">Играть на компьютере</button>
+        <button id="play-mobile">Играть на телефоне</button>
         <p>Всего очков: <span id="total-score">0</span></p>
     </div>
 
@@ -20,7 +21,10 @@
         </div>
         <div id="game-area">
             <div id="runner"></div>
-            <div id="obstacle"></div>
+        </div>
+        <div id="mobile-controls" class="hidden">
+            <button id="left-button">←</button>
+            <button id="right-button">→</button>
         </div>
     </div>
 
