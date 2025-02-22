@@ -71,6 +71,7 @@ function spawnObstacle() {
     obstacle.classList.add('obstacle');
     const positions = [60, 130, 200]; // Лево, центр, право (ближе к центру)
     obstacle.style.left = positions[Math.floor(Math.random() * 3)] + 'px';
+    obstacle.style.top = '0px'; // Начальная позиция сверху
     gameArea.appendChild(obstacle);
     setTimeout(spawnObstacle, 1000 - gameSpeed * 20); // Ускорение игры и больше препятствий
 }
@@ -79,7 +80,7 @@ function spawnObstacle() {
 function moveObstacles() {
     const obstacles = document.querySelectorAll('.obstacle');
     obstacles.forEach(obstacle => {
-        const obstacleTop = obstacle.offsetTop;
+        const obstacleTop = parseInt(obstacle.style.top);
         if (obstacleTop > 500) {
             obstacle.remove();
         } else {
