@@ -17,17 +17,20 @@ const mobileControls = document.getElementById('mobile-controls');
 const leftButton = document.getElementById('left-button');
 const rightButton = document.getElementById('right-button');
 
+// Обработчики событий
 playPcButton.addEventListener('click', () => startGame(false));
 playMobileButton.addEventListener('click', () => startGame(true));
 menuButton.addEventListener('click', returnToMenu);
 leftButton.addEventListener('click', () => moveRunner(-40));
 rightButton.addEventListener('click', () => moveRunner(40));
 
+// Управление с клавиатуры
 document.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowLeft') moveRunner(-40);
     if (event.key === 'ArrowRight') moveRunner(40);
 });
 
+// Запуск игры
 function startGame(mobile) {
     isMobile = mobile;
     mainMenu.classList.add('hidden');
@@ -40,6 +43,7 @@ function startGame(mobile) {
     spawnObstacle();
 }
 
+// Возврат в меню
 function returnToMenu() {
     clearInterval(gameInterval);
     gameContainer.classList.add('hidden');
@@ -49,12 +53,14 @@ function returnToMenu() {
     gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
 }
 
+// Движение препятствий и проверка столкновений
 function updateGame() {
     moveObstacles();
     checkCollision();
     updateScore();
 }
 
+// Движение человечка
 function moveRunner(offset) {
     const runnerLeft = runner.offsetLeft;
     const newPosition = runnerLeft + offset;
@@ -63,6 +69,7 @@ function moveRunner(offset) {
     }
 }
 
+// Создание препятствий
 function spawnObstacle() {
     const obstacle = document.createElement('div');
     obstacle.classList.add('obstacle');
@@ -72,6 +79,7 @@ function spawnObstacle() {
     setTimeout(spawnObstacle, 2000); // Новое препятствие каждые 2 секунды
 }
 
+// Движение препятствий
 function moveObstacles() {
     const obstacles = document.querySelectorAll('.obstacle');
     obstacles.forEach(obstacle => {
@@ -84,6 +92,7 @@ function moveObstacles() {
     });
 }
 
+// Проверка столкновений
 function checkCollision() {
     const obstacles = document.querySelectorAll('.obstacle');
     const runnerRect = runner.getBoundingClientRect();
@@ -98,6 +107,7 @@ function checkCollision() {
     });
 }
 
+// Обновление очков
 function updateScore() {
     currentScore += 1;
     currentScoreDisplay.textContent = currentScore;
