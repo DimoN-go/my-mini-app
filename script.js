@@ -16,7 +16,6 @@ const gameArea = document.getElementById('game-area');
 const mobileControls = document.getElementById('mobile-controls');
 const leftButton = document.getElementById('left-button');
 const rightButton = document.getElementById('right-button');
-const crashMessage = document.getElementById('crash-message');
 
 // Обработчики событий
 playPcButton.addEventListener('click', () => startGame(false));
@@ -40,9 +39,6 @@ function startGame(mobile) {
     currentScore = 0;
     gameSpeed = 2;
     updateScore();
-    gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
-    crashMessage.classList.add('hidden'); // Скрыть сообщение о столкновении
-    clearInterval(gameInterval); // Очистить предыдущий интервал
     gameInterval = setInterval(updateGame, 20);
     spawnObstacle();
 }
@@ -54,6 +50,14 @@ function returnToMenu() {
     mainMenu.classList.remove('hidden');
     totalScore += currentScore;
     totalScoreDisplay.textContent = totalScore;
+    gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
+}
+
+// Движение препятствий и проверка столкновений
+function updateGame() {
+    moveObstacles();
+    checkCollision();
+    updateScore();
 }
 
 // Движение человечка
@@ -69,18 +73,17 @@ function moveRunner(offset) {
 function spawnObstacle() {
     const obstacle = document.createElement('div');
     obstacle.classList.add('obstacle');
-    const positions = [60, 130, 200]; // Лево, центр, право (ближе к центру)
+    const positions = [0, 130, 260]; // Лево, центр, право
     obstacle.style.left = positions[Math.floor(Math.random() * 3)] + 'px';
-    obstacle.style.top = '0px'; // Начальная позиция сверху
     gameArea.appendChild(obstacle);
-    setTimeout(spawnObstacle, 1000 - gameSpeed * 20); // Ускорение игры и больше препятствий
+    setTimeout(spawnObstacle, 2000); // Новое препятствие каждые 2 секунды
 }
 
 // Движение препятствий
 function moveObstacles() {
     const obstacles = document.querySelectorAll('.obstacle');
     obstacles.forEach(obstacle => {
-        const obstacleTop = parseInt(obstacle.style.top);
+        const obstacleTop = obstacle.offsetTop;
         if (obstacleTop > 500) {
             obstacle.remove();
         } else {
@@ -99,33 +102,13 @@ function checkCollision() {
         if (runnerRect.left < obstacleRect.right &&
             runnerRect.right > obstacleRect.left &&
             runnerRect.bottom > obstacleRect.top) {
-            endGame();
+            returnToMenu();
         }
     });
 }
 
-// Завершение игры
-function endGame() {
-    clearInterval(gameInterval);
-    crashMessage.classList.remove('hidden');
-    setTimeout(() => {
-        crashMessage.classList.add('hidden');
-        returnToMenu();
-    }, 3000); // Через 3 секунды вернуться в меню
-}
-
-// Обновление очков и ускорение игры
+// Обновление очков
 function updateScore() {
     currentScore += 1;
     currentScoreDisplay.textContent = currentScore;
-    if (currentScore % 50 === 0) {
-        gameSpeed += 0.5; // Увеличение скорости каждые 50 очков
-    }
-}
-
-// Основной игровой цикл
-function updateGame() {
-    moveObstacles();
-    checkCollision();
-    updateScore();
 }
