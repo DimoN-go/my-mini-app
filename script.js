@@ -40,6 +40,9 @@ function startGame(mobile) {
     currentScore = 0;
     gameSpeed = 2;
     updateScore();
+    gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
+    crashMessage.classList.add('hidden'); // Скрыть сообщение о столкновении
+    clearInterval(gameInterval); // Очистить предыдущий интервал
     gameInterval = setInterval(updateGame, 20);
     spawnObstacle();
 }
@@ -51,7 +54,6 @@ function returnToMenu() {
     mainMenu.classList.remove('hidden');
     totalScore += currentScore;
     totalScoreDisplay.textContent = totalScore;
-    gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
 }
 
 // Движение человечка
@@ -70,7 +72,7 @@ function spawnObstacle() {
     const positions = [60, 130, 200]; // Лево, центр, право (ближе к центру)
     obstacle.style.left = positions[Math.floor(Math.random() * 3)] + 'px';
     gameArea.appendChild(obstacle);
-    setTimeout(spawnObstacle, 2000 - gameSpeed * 50); // Ускорение игры
+    setTimeout(spawnObstacle, 1000 - gameSpeed * 20); // Ускорение игры и больше препятствий
 }
 
 // Движение препятствий
@@ -118,4 +120,11 @@ function updateScore() {
     if (currentScore % 50 === 0) {
         gameSpeed += 0.5; // Увеличение скорости каждые 50 очков
     }
+}
+
+// Основной игровой цикл
+function updateGame() {
+    moveObstacles();
+    checkCollision();
+    updateScore();
 }
