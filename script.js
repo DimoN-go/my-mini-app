@@ -2,26 +2,42 @@ let currentScore = 0;
 let totalScore = 0;
 let gameSpeed = 2;
 let gameInterval;
+let isMobile = false;
 
 const mainMenu = document.getElementById('main-menu');
 const gameContainer = document.getElementById('game-container');
-const startButton = document.getElementById('start-button');
+const playPcButton = document.getElementById('play-pc');
+const playMobileButton = document.getElementById('play-mobile');
 const menuButton = document.getElementById('menu-button');
 const currentScoreDisplay = document.getElementById('current-score');
 const totalScoreDisplay = document.getElementById('total-score');
 const runner = document.getElementById('runner');
-const obstacle = document.getElementById('obstacle');
+const gameArea = document.getElementById('game-area');
+const mobileControls = document.getElementById('mobile-controls');
+const leftButton = document.getElementById('left-button');
+const rightButton = document.getElementById('right-button');
 
-startButton.addEventListener('click', startGame);
+playPcButton.addEventListener('click', () => startGame(false));
+playMobileButton.addEventListener('click', () => startGame(true));
 menuButton.addEventListener('click', returnToMenu);
+leftButton.addEventListener('click', () => moveRunner(-40));
+rightButton.addEventListener('click', () => moveRunner(40));
 
-function startGame() {
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') moveRunner(-40);
+    if (event.key === 'ArrowRight') moveRunner(40);
+});
+
+function startGame(mobile) {
+    isMobile = mobile;
     mainMenu.classList.add('hidden');
     gameContainer.classList.remove('hidden');
+    mobileControls.classList.toggle('hidden', !isMobile);
     currentScore = 0;
     gameSpeed = 2;
     updateScore();
     gameInterval = setInterval(updateGame, 20);
+    spawnObstacle();
 }
 
 function returnToMenu() {
@@ -30,30 +46,56 @@ function returnToMenu() {
     mainMenu.classList.remove('hidden');
     totalScore += currentScore;
     totalScoreDisplay.textContent = totalScore;
+    gameArea.innerHTML = '<div id="runner"></div>'; // Сброс игры
 }
 
 function updateGame() {
-    moveObstacle();
+    moveObstacles();
     checkCollision();
     updateScore();
 }
 
-function moveObstacle() {
-    let obstaclePosition = obstacle.offsetLeft;
-    if (obstaclePosition < -40) {
-        obstaclePosition = 600;
-        gameSpeed += 0.1;
+function moveRunner(offset) {
+    const runnerLeft = runner.offsetLeft;
+    const newPosition = runnerLeft + offset;
+    if (newPosition >= 0 && newPosition <= 260) {
+        runner.style.left = newPosition + 'px';
     }
-    obstacle.style.left = obstaclePosition - gameSpeed + 'px';
+}
+
+function spawnObstacle() {
+    const obstacle = document.createElement('div');
+    obstacle.classList.add('obstacle');
+    const positions = [0, 130, 260]; // Лево, центр, право
+    obstacle.style.left = positions[Math.floor(Math.random() * 3)] + 'px';
+    gameArea.appendChild(obstacle);
+    setTimeout(spawnObstacle, 2000); // Новое препятствие каждые 2 секунды
+}
+
+function moveObstacles() {
+    const obstacles = document.querySelectorAll('.obstacle');
+    obstacles.forEach(obstacle => {
+        const obstacleTop = obstacle.offsetTop;
+        if (obstacleTop > 500) {
+            obstacle.remove();
+        } else {
+            obstacle.style.top = obstacleTop + gameSpeed + 'px';
+        }
+    });
 }
 
 function checkCollision() {
-    const runnerBottom = parseInt(window.getComputedStyle(runner).getPropertyValue('bottom'));
-    const obstacleLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue('left'));
+    const obstacles = document.querySelectorAll('.obstacle');
+    const runnerRect = runner.getBoundingClientRect();
 
-    if (obstacleLeft < 90 && obstacleLeft > 50 && runnerBottom < 40) {
-        returnToMenu();
-    }
+    obstacles.forEach(obstacle => {
+        const obstacleRect = obstacle.getBoundingClientRect();
+        if (runnerRect.left < obstacleRect.right &&
+            runnerRect.right > obstacleRect.left &&
+            runnerRect.bottom > obstacleRect.top) {
+            returnToMenu();
+        }
+    });
 }
 
 function updateScore() {
