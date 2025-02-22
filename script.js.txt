@@ -1,0 +1,62 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.menu {
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+#game-container {
+    text-align: center;
+}
+
+#game-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+}
+
+#game-area {
+    position: relative;
+    width: 600px;
+    height: 200px;
+    background-color: #fff;
+    border: 2px solid #333;
+    overflow: hidden;
+}
+
+#runner {
+    position: absolute;
+    bottom: 0;
+    left: 50px;
+    width: 40px;
+    height: 40px;
+    background-color: red;
+}
+
+#obstacle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background-color: green;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
