@@ -8,7 +8,7 @@
 </head>
 <body>
     <header>
-        <h1>Smoney</h1>
+        <h1 class="logo">Smoney</h1>
         <div class="balance" onclick="toggleBalancePopup()">
             Баланс: <span id="balance">0</span> ₽
             <div class="balance-popup" id="balancePopup">
@@ -20,12 +20,19 @@
             </div>
         </div>
     </header>
-    <div class="game-container">
-        <div class="plinko-board" id="plinkoBoard"></div>
+    <div class="main-menu" id="mainMenu">
+        <h2>Мины</h2>
+        <button onclick="startMinesGame()">Играть</button>
+    </div>
+    <div class="game-container" id="gameContainer" style="display: none;">
+        <button class="back-button" onclick="goBackToMenu()">Назад</button>
+        <div class="mines-field" id="minesField"></div>
         <div class="controls">
             <input type="number" id="betAmount" placeholder="Ставка" min="1">
-            <button onclick="startGame()">Пуск</button>
+            <button onclick="placeBet()">Сделать ставку</button>
+            <button onclick="cashOut()">Забрать ставку</button>
         </div>
+        <div id="gameStatus"></div>
     </div>
     <script src="script.js"></script>
 </body>
