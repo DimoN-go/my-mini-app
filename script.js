@@ -12,10 +12,14 @@ const highScoreDisplay = document.getElementById('high-score');
 const runner = document.getElementById('runner');
 const gameArea = document.getElementById('game-area');
 const crashMessage = document.getElementById('crash-message');
+const leftButton = document.getElementById('left-button');
+const rightButton = document.getElementById('right-button');
 
 // Обработчики событий
 playButton.addEventListener('click', startGame);
 menuButton.addEventListener('click', returnToMenu);
+leftButton.addEventListener('click', () => moveRunner(-40));
+rightButton.addEventListener('click', () => moveRunner(40));
 
 // Управление с клавиатуры
 document.addEventListener('keydown', (event) => {
@@ -103,21 +107,4 @@ function endGame() {
     setTimeout(() => {
         crashMessage.classList.add('hidden');
         returnToMenu();
-    }, 3000); // Через 3 секунды вернуться в меню
-}
-
-// Обновление очков и ускорение игры
-function updateScore() {
-    currentScore += 1;
-    currentScoreDisplay.textContent = currentScore;
-    if (currentScore % 50 === 0) {
-        gameSpeed += 0.5; // Увеличение скорости каждые 50 очков
-    }
-}
-
-// Основной игровой цикл
-function updateGame() {
-    moveObstacles();
-    checkCollision();
-    updateScore();
-}
+    }, 3000); //
