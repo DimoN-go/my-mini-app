@@ -1,66 +1,67 @@
-document.getElementById('celebrateBtn').addEventListener('click', function () {
-    const mainText = document.getElementById('mainText');
-    const hiddenText = document.getElementById('hiddenText');
-    const button = document.getElementById('celebrateBtn');
+let balance = 0;
+const balanceElement = document.getElementById('balance');
+const balancePopup = document.getElementById('balancePopup');
+const plinkoBoard = document.getElementById('plinkoBoard');
+const betAmountInput = document.getElementById('betAmount');
 
-    // Анимация исчезновения кнопки и текста
-    gsap.to(button, { duration: 0.5, opacity: 0, y: -50, ease: "power2.out" });
-    gsap.to(mainText, { duration: 0.5, opacity: 0, y: -50, ease: "power2.out" });
+function toggleBalancePopup() {
+    balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
+}
 
-    // Анимация взрыва
-    const explosion = document.createElement('div');
-    explosion.className = 'explode';
-    explosion.style.position = 'absolute';
-    explosion.style.width = '20px';
-    explosion.style.height = '20px';
-    explosion.style.backgroundColor = '#e74c3c';
-    explosion.style.borderRadius = '50%';
-    explosion.style.top = '50%';
-    explosion.style.left = '50%';
-    explosion.style.transform = 'translate(-50%, -50%)';
-    document.body.appendChild(explosion);
+function addBalance(amount) {
+    balance += amount;
+    balanceElement.textContent = balance;
+    toggleBalancePopup();
+}
 
-    setTimeout(() => {
-        explosion.remove();
-    }, 1000);
-
-    // Появление праздничного текста
-    setTimeout(() => {
-        hiddenText.classList.remove('hidden');
-        gsap.from(hiddenText, {
-            duration: 1,
-            opacity: 0,
-            y: 50,
-            scale: 0.5,
-            ease: "elastic.out(1, 0.3)",
-        });
-
-        // Добавляем конфетти
-        createConfetti();
-    }, 1000);
-});
-
-// Функция для создания конфетти
-function createConfetti() {
-    const colors = ['#e74c3c', '#f1c40f', '#2ecc71', '#3498db', '#9b59b6'];
-    for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.width = '10px';
-        confetti.style.height = '10px';
-        confetti.style.position = 'absolute';
-        confetti.style.top = '0';
-        confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.borderRadius = '50%';
-        document.body.appendChild(confetti);
-
-        gsap.to(confetti, {
-            duration: Math.random() * 3 + 2,
-            y: window.innerHeight,
-            rotation: Math.random() * 360,
-            ease: "power1.out",
-            onComplete: () => confetti.remove(),
-        });
+function startGame() {
+    const betAmount = parseInt(betAmountInput.value);
+    if (isNaN(betAmount) || betAmount < 1) {
+        alert('Введите корректную ставку');
+        return;
     }
+    if (betAmount > balance) {
+        alert('Недостаточно средств на балансе');
+        return;
+    }
+    balance -= betAmount;
+    balanceElement.textContent = balance;
+
+    const ball = document.createElement('div');
+    ball.className = 'plinko-ball';
+    plinkoBoard.appendChild(ball);
+
+    let positionX = plinkoBoard.offsetWidth / 2 - 10;
+    let positionY = 0;
+    ball.style.left = `${positionX}px`;
+    ball.style.top = `${positionY}px`;
+
+    const interval = setInterval(() => {
+        positionY += 2;
+        positionX += (Math.random() - 0.5) * 4;
+        ball.style.left = `${positionX}px`;
+        ball.style.top = `${positionY}px`;
+
+        if (positionY >= plinkoBoard.offsetHeight - 20) {
+            clearInterval(interval);
+            const basketIndex = Math.floor((positionX + 10) / (plinkoBoard.offsetWidth / 13));
+            const multipliers = [100, 50, 20, 10, 5, 2, 0.2, 2, 5, 10, 20, 50, 100];
+            const multiplier = multipliers[basketIndex];
+            const winAmount = betAmount * multiplier;
+            balance += winAmount;
+            balanceElement.textContent = balance;
+            alert(`Шарик попал в корзину с множителем ${multiplier}x! Вы выиграли ${winAmount} ₽`);
+            plinkoBoard.removeChild(ball);
+        }
+    }, 10);
+}
+
+// Создание корзинок
+const basketWidth = plinkoBoard.offsetWidth / 13;
+for (let i = 0; i < 13; i++) {
+    const basket = document.createElement('div');
+    basket.className = 'plinko-basket';
+    basket.style.left = `${i * basketWidth}px`;
+    basket.textContent = `${[100, 50, 20, 10, 5, 2, 0.2, 2, 5, 10, 20, 50, 100][i]}x`;
+    plinkoBoard.appendChild(basket);
 }
