@@ -4,6 +4,7 @@ let multiplier = 1;
 let mines = [];
 let revealedCells = [];
 let gameActive = false;
+let isFirstMine = true; // Флаг для первой мины
 
 const balanceElement = document.getElementById('balance');
 const balancePopup = document.getElementById('balancePopup');
@@ -41,6 +42,7 @@ function resetGame() {
     gameActive = false;
     currentBet = 0;
     multiplier = 1;
+    isFirstMine = true; // Сбрасываем флаг первой мины
     gameStatus.textContent = '';
     minesField.innerHTML = '';
     betAmountInput.value = '';
@@ -94,13 +96,18 @@ function revealCell(index) {
 
     if (mines.includes(index)) {
         cell.textContent = '💣';
+        if (isFirstMine) {
+            // Если это первая мина, умножаем ставку на 0.03
+            multiplier *= 0.03;
+            isFirstMine = false; // Сбрасываем флаг первой мины
+        }
         gameActive = false;
-        gameStatus.textContent = 'Вы нашли мину! Игра перезапустится через 3 секунды.';
+        gameStatus.textContent = `Вы нашли мину! Множитель: ${multiplier.toFixed(2)}x. Игра перезапустится через 3 секунды.`;
         setTimeout(resetGame, 3000); // Перезапуск игры через 3 секунды
     } else {
         cell.textContent = '⭐';
         revealedCells.push(index);
-        multiplier *= 1.4; // Увеличиваем множитель на 1.4
+        multiplier *= 1.3; // Увеличиваем множитель на 1.3
         gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
     }
 }
