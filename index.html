@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>С 23 февраля!</title>
+    <title>Smoney Casino</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1 id="mainText">Это кстати мой первый сайт</h1>
-        <button id="celebrateBtn">Нажми на меня</button>
-        <p id="hiddenText" class="hidden">С 23 февраля!</p>
+    <header>
+        <h1>Smoney</h1>
+        <div class="balance" onclick="toggleBalancePopup()">
+            Баланс: <span id="balance">0</span> ₽
+            <div class="balance-popup" id="balancePopup">
+                <button onclick="addBalance(500)">+500 ₽</button>
+                <button onclick="addBalance(1000)">+1000 ₽</button>
+                <button onclick="addBalance(2000)">+2000 ₽</button>
+                <button onclick="addBalance(5000)">+5000 ₽</button>
+                <button onclick="addBalance(10000)">+10000 ₽</button>
+            </div>
+        </div>
+    </header>
+    <div class="game-container">
+        <div class="plinko-board" id="plinkoBoard"></div>
+        <div class="controls">
+            <input type="number" id="betAmount" placeholder="Ставка" min="1">
+            <button onclick="startGame()">Пуск</button>
+        </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/TextPlugin.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
