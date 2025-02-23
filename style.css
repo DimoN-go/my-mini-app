@@ -1,83 +1,60 @@
 body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #0a2e38, #1c5a6e);
     margin: 0;
-    font-family: Arial, sans-serif;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    overflow: hidden;
+    color: #fff;
 }
 
-.menu {
+.container {
     text-align: center;
+}
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #c0392b;
 }
 
 .hidden {
     display: none;
 }
 
-#game-container {
-    text-align: center;
-}
-
-#game-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #333;
-    color: white;
-}
-
-#game-area {
-    position: relative;
-    width: 300px;
-    height: 500px;
-    background-color: #fff;
-    border: 2px solid #333;
-    overflow: hidden;
-}
-
-#runner {
-    position: absolute;
-    bottom: 0;
-    left: 130px; /* Центрирование */
-    width: 40px;
-    height: 40px;
-    background-color: red;
-    transition: left 0.2s;
-}
-
-.obstacle {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background-color: green;
-}
-
-#mobile-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-#mobile-controls button {
-    padding: 10px 20px;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-#crash-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 24px;
-    color: red;
+#hiddenText {
+    font-size: 2.5rem;
     font-weight: bold;
+    color: #f1c40f;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+/* Анимация взрыва */
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
+}
+
+.explode {
+    animation: explode 1s ease-out forwards;
 }
