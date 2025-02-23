@@ -54,6 +54,18 @@ body {
     background-color: green;
 }
 
+#mobile-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+#mobile-controls button {
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
 #crash-message {
     position: absolute;
     top: 50%;
