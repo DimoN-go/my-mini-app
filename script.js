@@ -1,29 +1,21 @@
 let currentScore = 0;
-let totalScore = 0;
+let highScore = 0;
 let gameSpeed = 2;
 let gameInterval;
-let isMobile = false;
 
 const mainMenu = document.getElementById('main-menu');
 const gameContainer = document.getElementById('game-container');
-const playPcButton = document.getElementById('play-pc');
-const playMobileButton = document.getElementById('play-mobile');
+const playButton = document.getElementById('play-button');
 const menuButton = document.getElementById('menu-button');
 const currentScoreDisplay = document.getElementById('current-score');
-const totalScoreDisplay = document.getElementById('total-score');
+const highScoreDisplay = document.getElementById('high-score');
 const runner = document.getElementById('runner');
 const gameArea = document.getElementById('game-area');
-const mobileControls = document.getElementById('mobile-controls');
-const leftButton = document.getElementById('left-button');
-const rightButton = document.getElementById('right-button');
 const crashMessage = document.getElementById('crash-message');
 
 // Обработчики событий
-playPcButton.addEventListener('click', () => startGame(false));
-playMobileButton.addEventListener('click', () => startGame(true));
+playButton.addEventListener('click', startGame);
 menuButton.addEventListener('click', returnToMenu);
-leftButton.addEventListener('click', () => moveRunner(-40));
-rightButton.addEventListener('click', () => moveRunner(40));
 
 // Управление с клавиатуры
 document.addEventListener('keydown', (event) => {
@@ -32,11 +24,9 @@ document.addEventListener('keydown', (event) => {
 });
 
 // Запуск игры
-function startGame(mobile) {
-    isMobile = mobile;
+function startGame() {
     mainMenu.classList.add('hidden');
     gameContainer.classList.remove('hidden');
-    mobileControls.classList.toggle('hidden', !isMobile);
     currentScore = 0;
     gameSpeed = 2;
     updateScore();
@@ -52,8 +42,10 @@ function returnToMenu() {
     clearInterval(gameInterval);
     gameContainer.classList.add('hidden');
     mainMenu.classList.remove('hidden');
-    totalScore += currentScore;
-    totalScoreDisplay.textContent = totalScore;
+    if (currentScore > highScore) {
+        highScore = currentScore;
+        highScoreDisplay.textContent = highScore;
+    }
 }
 
 // Движение человечка
@@ -114,4 +106,9 @@ function endGame() {
     }, 3000); // Через 3 секунды вернуться в меню
 }
 
-// Обновление очков и
+// Обновление очков и ускорение игры
+function updateScore() {
+    currentScore += 1;
+    currentScoreDisplay.textContent = currentScore;
+    if (currentScore % 50 === 0) {
+        gameSpeed += 0.5; // Увеличение скорости каждые 50 оч
