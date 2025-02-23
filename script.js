@@ -1,6 +1,6 @@
 let balance = 0;
 let currentBet = 0;
-let multiplier = 0.02;
+let multiplier = 1;
 let mines = [];
 let revealedCells = [];
 let gameActive = false;
@@ -40,7 +40,7 @@ function resetGame() {
     revealedCells = [];
     gameActive = false;
     currentBet = 0;
-    multiplier = 0.02;
+    multiplier = 1;
     gameStatus.textContent = '';
     minesField.innerHTML = '';
     betAmountInput.value = '';
@@ -48,6 +48,7 @@ function resetGame() {
 }
 
 function createMinesField() {
+    minesField.innerHTML = ''; // Очищаем поле
     for (let i = 0; i < 36; i++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
@@ -94,12 +95,13 @@ function revealCell(index) {
     if (mines.includes(index)) {
         cell.textContent = '💣';
         gameActive = false;
-        gameStatus.textContent = 'Вы нашли мину! Игра окончена.';
+        gameStatus.textContent = 'Вы нашли мину! Игра перезапустится через 3 секунды.';
+        setTimeout(resetGame, 3000); // Перезапуск игры через 3 секунды
     } else {
         cell.textContent = '⭐';
         revealedCells.push(index);
-        multiplier *= 2;
-        gameStatus.textContent = `Множитель: ${multiplier}x`;
+        multiplier *= 1.4; // Увеличиваем множитель на 1.4
+        gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
     }
 }
 
@@ -110,5 +112,6 @@ function cashOut() {
     balance += winAmount;
     balanceElement.textContent = balance;
     gameActive = false;
-    gameStatus.textContent = `Вы забрали ставку! Ваш выигрыш: ${winAmount} ₽`;
+    gameStatus.textContent = `Вы забрали ставку! Ваш выигрыш: ${winAmount.toFixed(2)} ₽`;
+    resetGame(); // Сбрасываем игру после завершения
 }
