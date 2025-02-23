@@ -107,4 +107,21 @@ function endGame() {
     setTimeout(() => {
         crashMessage.classList.add('hidden');
         returnToMenu();
-    }, 3000); //
+    }, 3000); // Через 3 секунды вернуться в меню
+}
+
+// Обновление очков и ускорение игры
+function updateScore() {
+    currentScore += 1;
+    currentScoreDisplay.textContent = currentScore;
+    if (currentScore % 50 === 0) {
+        gameSpeed += 0.5; // Увеличение скорости каждые 50 очков
+    }
+}
+
+// Основной игровой цикл
+function updateGame() {
+    moveObstacles();
+    checkCollision();
+    updateScore();
+}
