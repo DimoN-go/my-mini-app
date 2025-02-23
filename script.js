@@ -111,4 +111,13 @@ function updateScore() {
     currentScore += 1;
     currentScoreDisplay.textContent = currentScore;
     if (currentScore % 50 === 0) {
-        gameSpeed += 0.5; // Увеличение скорости каждые 50 оч
+        gameSpeed += 0.5; // Увеличение скорости каждые 50 очков
+    }
+}
+
+// Основной игровой цикл
+function updateGame() {
+    moveObstacles();
+    checkCollision();
+    updateScore();
+}
