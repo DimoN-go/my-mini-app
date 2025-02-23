@@ -3,31 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Бегущий человечек</title>
+    <title>С 23 февраля!</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="main-menu" class="menu">
-        <h1>Бегущий человечек</h1>
-        <button id="play-button">Играть</button>
-        <p>Рекорд: <span id="high-score">0</span></p>
+    <div class="container">
+        <h1 id="mainText">Это кстати мой первый сайт</h1>
+        <button id="celebrateBtn">Нажми на меня</button>
+        <p id="hiddenText" class="hidden">С 23 февраля!</p>
     </div>
-
-    <div id="game-container" class="hidden">
-        <div id="game-header">
-            <button id="menu-button">Меню</button>
-            <p>Очки: <span id="current-score">0</span></p>
-        </div>
-        <div id="game-area">
-            <div id="runner"></div>
-        </div>
-        <div id="mobile-controls">
-            <button id="left-button">←</button>
-            <button id="right-button">→</button>
-        </div>
-        <div id="crash-message" class="hidden">Врезался!</div>
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/TextPlugin.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
