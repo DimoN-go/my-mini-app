@@ -6,9 +6,21 @@ let cashOutButton = document.getElementById('cashOutButton');
 let multiplierElement = document.getElementById('multiplier');
 let rocket = document.getElementById('rocket');
 let gameStatus = document.getElementById('gameStatus');
+let balanceElement = document.getElementById('balance');
 
 // Логика для контроля выигрышей и проигрышей
 let crashPoint = Math.random() * 10 + 1; // Точка "краша" (от 1x до 11x)
+
+function toggleBalancePopup() {
+    const balancePopup = document.getElementById('balancePopup');
+    balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
+}
+
+function addBalance(amount) {
+    balance += amount;
+    balanceElement.textContent = Math.floor(balance);
+    toggleBalancePopup();
+}
 
 function goBackToMainMenu() {
     window.location.href = 'index.html';
@@ -25,6 +37,7 @@ function placeBet() {
         return;
     }
     balance -= betAmount;
+    balanceElement.textContent = Math.floor(balance);
     currentBet = betAmount;
     gameActive = true;
     cashOutButton.disabled = false;
@@ -34,7 +47,9 @@ function placeBet() {
 function startGame() {
     multiplier = 1;
     crashPoint = Math.random() * 10 + 1; // Новая точка "краша"
-    rocket.style.animation = 'fly 5s linear infinite';
+    rocket.style.bottom = '-100px'; // Ракета начинается за пределами экрана
+    rocket.style.transition = 'bottom 5s linear';
+    rocket.style.bottom = '100%'; // Ракета летит вверх
     updateMultiplier();
 }
 
@@ -47,7 +62,6 @@ function updateMultiplier() {
     } else if (gameActive) {
         // Игрок не успел забрать ставку
         gameActive = false;
-        rocket.style.animation = 'none';
         gameStatus.textContent = 'Вы не успели забрать ставку!';
         setTimeout(() => {
             gameStatus.textContent = '';
@@ -60,8 +74,8 @@ function cashOut() {
     if (gameActive) {
         const winAmount = currentBet * multiplier;
         balance += winAmount;
+        balanceElement.textContent = Math.floor(balance);
         gameActive = false;
-        rocket.style.animation = 'none';
         gameStatus.textContent = `Вы забрали ставку! Ваш выигрыш: ${Math.floor(winAmount)} ₽`;
         cashOutButton.disabled = true;
         setTimeout(() => {
@@ -76,4 +90,6 @@ function resetGame() {
     multiplierElement.textContent = '1.00x';
     cashOutButton.textContent = 'Забрать: 0 ₽';
     currentBet = 0;
+    rocket.style.transition = 'none';
+    rocket.style.bottom = '-100px'; // Ракета возвращается в исходное положение
 }
