@@ -32,6 +32,37 @@ header button:hover {
     background-color: #ffdd33;
 }
 
+.balance {
+    position: relative;
+    cursor: pointer;
+}
+
+.balance-popup {
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.balance-popup button {
+    display: block;
+    margin: 5px 0;
+    padding: 5px 10px;
+    background-color: #444;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.balance-popup button:hover {
+    background-color: #555;
+}
+
 .game-container {
     margin-top: 20px;
 }
@@ -45,23 +76,13 @@ header button:hover {
 
 .rocket {
     position: absolute;
-    bottom: 0;
+    bottom: -100px; /* Ракета начинается за пределами экрана */
     left: 50%;
     transform: translateX(-50%);
     width: 50px;
     height: 100px;
     background-color: #ff4444;
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-    animation: fly 5s linear infinite;
-}
-
-@keyframes fly {
-    0% {
-        bottom: 0;
-    }
-    100% {
-        bottom: 100%;
-    }
 }
 
 .multiplier {
