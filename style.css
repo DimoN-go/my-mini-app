@@ -14,36 +14,13 @@ header {
     align-items: center;
 }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-}
-
-.logo {
+header h1 {
+    margin: 0;
     font-size: 48px;
     font-weight: bold;
     text-transform: uppercase;
     color: #fff;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    margin: 0;
-}
-
-.ball-animation {
-    width: 20px;
-    height: 20px;
-    background-color: #ffcc00;
-    border-radius: 50%;
-    margin-left: 10px;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
 }
 
 .balance {
@@ -89,119 +66,9 @@ header {
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
+    margin: 10px;
 }
 
 .main-menu button:hover {
     background-color: #ffdd33;
-}
-
-.game-container {
-    margin-top: 20px;
-}
-
-.back-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 5px 10px;
-    background-color: #444;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-
-.back-button:hover {
-    background-color: #555;
-}
-
-.mines-field {
-    display: grid;
-    grid-template-columns: repeat(6, 50px);
-    grid-template-rows: repeat(6, 50px);
-    gap: 5px;
-    margin: 20px auto;
-    justify-content: center;
-}
-
-.mines-field .cell {
-    width: 50px;
-    height: 50px;
-    background-color: #444;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 20px;
-    transition: background-color 0.3s ease;
-}
-
-.mines-field .cell.revealed {
-    background-color: #666;
-}
-
-.mines-field .cell.star {
-    background-color: #ffcc00;
-    animation: glow 1s infinite alternate;
-}
-
-@keyframes glow {
-    from {
-        box-shadow: 0 0 5px #ffcc00;
-    }
-    to {
-        box-shadow: 0 0 20px #ffcc00;
-    }
-}
-
-.mines-field .cell.bomb {
-    background-color: #ff4444;
-    animation: explode 0.5s ease-out;
-}
-
-@keyframes explode {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.5);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.controls {
-    margin-top: 20px;
-}
-
-.controls input {
-    padding: 5px;
-    width: 100px;
-}
-
-.controls button {
-    padding: 5px 10px;
-    background-color: #ffcc00;
-    color: #000;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    margin: 5px;
-}
-
-.controls button:hover {
-    background-color: #ffdd33;
-}
-
-#gameStatus {
-    margin-top: 20px;
-    font-size: 18px;
-}
-
-#nextMultiplier {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #ffcc00;
 }
