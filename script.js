@@ -4,7 +4,7 @@ let multiplier = 1;
 let mines = [];
 let revealedCells = [];
 let gameActive = false;
-let isFirstMine = true; // Флаг для первой мины
+let isFirstClick = true; // Флаг для первого нажатия
 
 const balanceElement = document.getElementById('balance');
 const balancePopup = document.getElementById('balancePopup');
@@ -20,7 +20,7 @@ function toggleBalancePopup() {
 
 function addBalance(amount) {
     balance += amount;
-    balanceElement.textContent = balance;
+    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
     toggleBalancePopup();
 }
 
@@ -40,12 +40,10 @@ function resetGame() {
     mines = [];
     revealedCells = [];
     gameActive = false;
-    currentBet = 0;
     multiplier = 1;
-    isFirstMine = true; // Сбрасываем флаг первой мины
+    isFirstClick = true; // Сбрасываем флаг первого нажатия
     gameStatus.textContent = '';
     minesField.innerHTML = '';
-    betAmountInput.value = '';
     createMinesField();
 }
 
@@ -71,7 +69,7 @@ function placeBet() {
         return;
     }
     balance -= betAmount;
-    balanceElement.textContent = balance;
+    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
     currentBet = betAmount;
     gameActive = true;
     placeMines();
@@ -96,18 +94,19 @@ function revealCell(index) {
 
     if (mines.includes(index)) {
         cell.textContent = '💣';
-        if (isFirstMine) {
-            // Если это первая мина, умножаем ставку на 0.03
-            multiplier *= 0.03;
-            isFirstMine = false; // Сбрасываем флаг первой мины
-        }
         gameActive = false;
         gameStatus.textContent = `Вы нашли мину! Множитель: ${multiplier.toFixed(2)}x. Игра перезапустится через 3 секунды.`;
         setTimeout(resetGame, 3000); // Перезапуск игры через 3 секунды
     } else {
         cell.textContent = '⭐';
         revealedCells.push(index);
-        multiplier *= 1.3; // Увеличиваем множитель на 1.3
+        if (isFirstClick) {
+            // Если это первое нажатие, умножаем на 0.04
+            multiplier *= 0.04;
+            isFirstClick = false; // Сбрасываем флаг первого нажатия
+        } else {
+            multiplier *= 1.6; // Увеличиваем множитель на 1.6
+        }
         gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
     }
 }
@@ -117,8 +116,28 @@ function cashOut() {
 
     const winAmount = currentBet * multiplier;
     balance += winAmount;
-    balanceElement.textContent = balance;
+    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
     gameActive = false;
-    gameStatus.textContent = `Вы забрали ставку! Ваш выигрыш: ${winAmount.toFixed(2)} ₽`;
+    showWinMessage(`Вы выиграли: ${Math.floor(winAmount)} ₽`); // Показываем сообщение о выигрыше
     resetGame(); // Сбрасываем игру после завершения
+}
+
+function showWinMessage(message) {
+    const winMessage = document.createElement('div');
+    winMessage.className = 'win-message';
+    winMessage.textContent = message;
+    document.body.appendChild(winMessage);
+
+    // Анимация появления
+    setTimeout(() => {
+        winMessage.style.opacity = '1';
+    }, 10);
+
+    // Удаление сообщения через 3 секунды
+    setTimeout(() => {
+        winMessage.style.opacity = '0';
+        setTimeout(() => {
+            winMessage.remove();
+        }, 300);
+    }, 3000);
 }
