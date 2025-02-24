@@ -6,7 +6,7 @@ let revealedCells = [];
 let gameActive = false;
 let clickCount = 0;
 
-// Система множителей (создает иллюзию выбора, но казино остается в плюсе)
+// Множители по вашему списку
 const multipliers = [
     0.08, 0.16, 0.32, 0.48, 0.64, 0.82, 1.07, 1.28, 1.53, 1.81,
     2.16, 2.33, 2.71, 3.14, 3.58, 4.01, 4.41, 5.11, 5.76, 6.78,
@@ -22,6 +22,10 @@ const minesField = document.getElementById('minesField');
 const betAmountInput = document.getElementById('betAmount');
 const gameStatus = document.getElementById('gameStatus');
 const nextMultiplierValue = document.getElementById('nextMultiplierValue');
+
+// Логика для контроля выигрышей и проигрышей
+let winStreak = 0; // Счетчик выигрышей подряд
+let loseStreak = 0; // Счетчик проигрышей подряд
 
 function toggleBalancePopup() {
     balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
@@ -102,15 +106,9 @@ function revealCell(index) {
     const cell = minesField.children[index];
     cell.classList.add('revealed');
 
-    if (mines.includes(index)) {
-        cell.textContent = '💣';
-        cell.classList.add('bomb');
-        document.getElementById('bombSound').play();
-        gameActive = false;
-        gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
-        showAllMines(); // Показываем все мины и звездочки
-        setTimeout(resetGame, 3000);
-    } else {
+    // Логика для контроля выигрышей и проигрышей
+    if (winStreak < 2 && Math.random() < 0.7) {
+        // Игрок выигрывает первые 2 раза
         cell.textContent = '⭐';
         cell.classList.add('star');
         document.getElementById('starSound').play();
@@ -119,6 +117,19 @@ function revealCell(index) {
         multiplier = multipliers[clickCount - 1];
         updateNextMultiplier();
         gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+        winStreak++;
+        loseStreak = 0;
+    } else {
+        // Игрок проигрывает
+        cell.textContent = '💣';
+        cell.classList.add('bomb');
+        document.getElementById('bombSound').play();
+        gameActive = false;
+        gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
+        showAllMines();
+        setTimeout(resetGame, 3000);
+        winStreak = 0;
+        loseStreak++;
     }
 }
 
