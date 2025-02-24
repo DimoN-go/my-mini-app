@@ -26,6 +26,7 @@ const nextMultiplierValue = document.getElementById('nextMultiplierValue');
 // Логика для контроля выигрышей и проигрышей
 let winStreak = 0; // Счетчик выигрышей подряд
 let loseStreak = 0; // Счетчик проигрышей подряд
+let isFirstGame = true; // Флаг для первой игры
 
 function toggleBalancePopup() {
     balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
@@ -107,29 +108,55 @@ function revealCell(index) {
     cell.classList.add('revealed');
 
     // Логика для контроля выигрышей и проигрышей
-    if (winStreak < 2 && Math.random() < 0.7) {
-        // Игрок выигрывает первые 2 раза
-        cell.textContent = '⭐';
-        cell.classList.add('star');
-        document.getElementById('starSound').play();
-        revealedCells.push(index);
-        clickCount++;
-        multiplier = multipliers[clickCount - 1];
-        updateNextMultiplier();
-        gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
-        winStreak++;
-        loseStreak = 0;
+    if (isFirstGame || winStreak < 2) {
+        // Первая игра или первые 2 выигрыша
+        if (!mines.includes(index)) {
+            cell.textContent = '⭐';
+            cell.classList.add('star');
+            document.getElementById('starSound').play();
+            revealedCells.push(index);
+            clickCount++;
+            multiplier = multipliers[clickCount - 1];
+            updateNextMultiplier();
+            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+            winStreak++;
+            loseStreak = 0;
+        } else {
+            // Игрок нашел мину, но мы делаем так, чтобы он не проиграл сразу
+            cell.textContent = '⭐';
+            cell.classList.add('star');
+            document.getElementById('starSound').play();
+            revealedCells.push(index);
+            clickCount++;
+            multiplier = multipliers[clickCount - 1];
+            updateNextMultiplier();
+            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+            winStreak++;
+            loseStreak = 0;
+        }
+        isFirstGame = false;
     } else {
-        // Игрок проигрывает
-        cell.textContent = '💣';
-        cell.classList.add('bomb');
-        document.getElementById('bombSound').play();
-        gameActive = false;
-        gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
-        showAllMines();
-        setTimeout(resetGame, 3000);
-        winStreak = 0;
-        loseStreak++;
+        // После первых 2 выигрышей игрок начинает проигрывать
+        if (mines.includes(index)) {
+            cell.textContent = '💣';
+            cell.classList.add('bomb');
+            document.getElementById('bombSound').play();
+            gameActive = false;
+            gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
+            showAllMines();
+            setTimeout(resetGame, 3000);
+            winStreak = 0;
+            loseStreak++;
+        } else {
+            cell.textContent = '⭐';
+            cell.classList.add('star');
+            document.getElementById('starSound').play();
+            revealedCells.push(index);
+            clickCount++;
+            multiplier = multipliers[clickCount - 1];
+            updateNextMultiplier();
+            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+        }
     }
 }
 
