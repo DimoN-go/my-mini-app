@@ -9,6 +9,16 @@
 <body>
     <header>
         <h1>Crash</h1>
+        <div class="balance" onclick="toggleBalancePopup()">
+            Баланс: <span id="balance">0</span> ₽
+            <div class="balance-popup" id="balancePopup">
+                <button onclick="addBalance(500)">+500 ₽</button>
+                <button onclick="addBalance(1000)">+1000 ₽</button>
+                <button onclick="addBalance(2000)">+2000 ₽</button>
+                <button onclick="addBalance(5000)">+5000 ₽</button>
+                <button onclick="addBalance(10000)">+10000 ₽</button>
+            </div>
+        </div>
         <button onclick="goBackToMainMenu()">Назад в меню</button>
     </header>
     <div class="game-container">
