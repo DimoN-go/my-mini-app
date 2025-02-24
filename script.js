@@ -6,6 +6,7 @@ let revealedCells = [];
 let gameActive = false;
 let clickCount = 0;
 
+// Система множителей (создает иллюзию выбора, но казино остается в плюсе)
 const multipliers = [
     0.08, 0.16, 0.32, 0.64, 0.92, 1.21, 1.44, 1.67, 2.11, 3.21,
     4.56, 6.85, 9.21, 11.43, 14.56, 18.41, 22.11, 26.78, 32.87, 40.44
@@ -105,6 +106,7 @@ function revealCell(index) {
         document.getElementById('bombSound').play();
         gameActive = false;
         gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
+        showAllMines(); // Показываем все мины и звездочки
         setTimeout(resetGame, 3000);
     } else {
         cell.textContent = '⭐';
@@ -115,6 +117,19 @@ function revealCell(index) {
         multiplier = multipliers[clickCount - 1];
         updateNextMultiplier();
         gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+    }
+}
+
+function showAllMines() {
+    for (let i = 0; i < 36; i++) {
+        const cell = minesField.children[i];
+        if (mines.includes(i)) {
+            cell.textContent = '💣';
+            cell.classList.add('bomb');
+        } else {
+            cell.textContent = '⭐';
+            cell.classList.add('star');
+        }
     }
 }
 
