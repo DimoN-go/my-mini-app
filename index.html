@@ -8,7 +8,10 @@
 </head>
 <body>
     <header>
-        <h1 class="logo">Smoney</h1>
+        <div class="logo-container">
+            <h1 class="logo">Smoney</h1>
+            <div class="ball-animation"></div>
+        </div>
         <div class="balance" onclick="toggleBalancePopup()">
             Баланс: <span id="balance">0</span> ₽
             <div class="balance-popup" id="balancePopup">
@@ -33,7 +36,11 @@
             <button onclick="cashOut()">Забрать ставку</button>
         </div>
         <div id="gameStatus"></div>
+        <div id="nextMultiplier">Следующий множитель: <span id="nextMultiplierValue">0.08x</span></div>
     </div>
+    <audio id="starSound" src="star.mp3"></audio>
+    <audio id="bombSound" src="bomb.mp3"></audio>
+    <audio id="coinSound" src="coin.mp3"></audio>
     <script src="script.js"></script>
 </body>
 </html>
