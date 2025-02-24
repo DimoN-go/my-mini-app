@@ -24,8 +24,9 @@ const gameStatus = document.getElementById('gameStatus');
 const nextMultiplierValue = document.getElementById('nextMultiplierValue');
 
 // Логика для контроля выигрышей и проигрышей
-let isFirstPhase = true; // Фаза, когда игрок выигрывает
-let targetStars = Math.floor(Math.random() * 8) + 8; // От 8 до 15 звезд
+let winStreak = 0; // Счетчик выигрышей подряд
+let loseStreak = 0; // Счетчик проигрышей подряд
+let isFirstGame = true; // Флаг для первой игры
 
 function toggleBalancePopup() {
     balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
@@ -55,8 +56,6 @@ function resetGame() {
     gameActive = false;
     clickCount = 0;
     multiplier = 1;
-    isFirstPhase = true;
-    targetStars = Math.floor(Math.random() * 8) + 8; // Новое количество звезд для выигрыша
     gameStatus.textContent = '';
     minesField.innerHTML = '';
     createMinesField();
@@ -108,9 +107,10 @@ function revealCell(index) {
     const cell = minesField.children[index];
     cell.classList.add('revealed');
 
-    if (isFirstPhase) {
-        // Фаза выигрыша (игрок набирает от 8 до 15 звезд)
-        if (clickCount < targetStars) {
+    // Логика для контроля выигрышей и проигрышей
+    if (isFirstGame || winStreak < 2) {
+        // Первая игра или первые 2 выигрыша
+        if (!mines.includes(index)) {
             cell.textContent = '⭐';
             cell.classList.add('star');
             document.getElementById('starSound').play();
@@ -119,19 +119,24 @@ function revealCell(index) {
             multiplier = multipliers[clickCount - 1];
             updateNextMultiplier();
             gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+            winStreak++;
+            loseStreak = 0;
         } else {
-            // Переход к фазе проигрыша
-            isFirstPhase = false;
-            cell.textContent = '💣';
-            cell.classList.add('bomb');
-            document.getElementById('bombSound').play();
-            gameActive = false;
-            gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
-            showAllMines();
-            setTimeout(resetGame, 3000);
+            // Игрок нашел мину, но мы делаем так, чтобы он не проиграл сразу
+            cell.textContent = '⭐';
+            cell.classList.add('star');
+            document.getElementById('starSound').play();
+            revealedCells.push(index);
+            clickCount++;
+            multiplier = multipliers[clickCount - 1];
+            updateNextMultiplier();
+            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
+            winStreak++;
+            loseStreak = 0;
         }
+        isFirstGame = false;
     } else {
-        // Фаза проигрыша (игрок натыкается на бомбу)
+        // После первых 2 выигрышей игрок начинает проигрывать
         if (mines.includes(index)) {
             cell.textContent = '💣';
             cell.classList.add('bomb');
@@ -140,6 +145,8 @@ function revealCell(index) {
             gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
             showAllMines();
             setTimeout(resetGame, 3000);
+            winStreak = 0;
+            loseStreak++;
         } else {
             cell.textContent = '⭐';
             cell.classList.add('star');
