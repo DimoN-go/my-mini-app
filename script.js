@@ -4,7 +4,12 @@ let multiplier = 1;
 let mines = [];
 let revealedCells = [];
 let gameActive = false;
-let isFirstClick = true; // Флаг для первого нажатия
+let clickCount = 0;
+
+const multipliers = [
+    0.08, 0.16, 0.32, 0.64, 0.92, 1.21, 1.44, 1.67, 2.11, 3.21,
+    4.56, 6.85, 9.21, 11.43, 14.56, 18.41, 22.11, 26.78, 32.87, 40.44
+];
 
 const balanceElement = document.getElementById('balance');
 const balancePopup = document.getElementById('balancePopup');
@@ -13,6 +18,7 @@ const gameContainer = document.getElementById('gameContainer');
 const minesField = document.getElementById('minesField');
 const betAmountInput = document.getElementById('betAmount');
 const gameStatus = document.getElementById('gameStatus');
+const nextMultiplierValue = document.getElementById('nextMultiplierValue');
 
 function toggleBalancePopup() {
     balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
@@ -20,7 +26,7 @@ function toggleBalancePopup() {
 
 function addBalance(amount) {
     balance += amount;
-    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
+    balanceElement.textContent = Math.floor(balance);
     toggleBalancePopup();
 }
 
@@ -40,15 +46,16 @@ function resetGame() {
     mines = [];
     revealedCells = [];
     gameActive = false;
+    clickCount = 0;
     multiplier = 1;
-    isFirstClick = true; // Сбрасываем флаг первого нажатия
     gameStatus.textContent = '';
     minesField.innerHTML = '';
     createMinesField();
+    updateNextMultiplier();
 }
 
 function createMinesField() {
-    minesField.innerHTML = ''; // Очищаем поле
+    minesField.innerHTML = '';
     for (let i = 0; i < 36; i++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
@@ -69,7 +76,7 @@ function placeBet() {
         return;
     }
     balance -= betAmount;
-    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
+    balanceElement.textContent = Math.floor(balance);
     currentBet = betAmount;
     gameActive = true;
     placeMines();
@@ -94,19 +101,19 @@ function revealCell(index) {
 
     if (mines.includes(index)) {
         cell.textContent = '💣';
+        cell.classList.add('bomb');
+        document.getElementById('bombSound').play();
         gameActive = false;
-        gameStatus.textContent = `Вы нашли мину! Множитель: ${multiplier.toFixed(2)}x. Игра перезапустится через 3 секунды.`;
-        setTimeout(resetGame, 3000); // Перезапуск игры через 3 секунды
+        gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
+        setTimeout(resetGame, 3000);
     } else {
         cell.textContent = '⭐';
+        cell.classList.add('star');
+        document.getElementById('starSound').play();
         revealedCells.push(index);
-        if (isFirstClick) {
-            // Если это первое нажатие, умножаем на 0.04
-            multiplier *= 0.04;
-            isFirstClick = false; // Сбрасываем флаг первого нажатия
-        } else {
-            multiplier *= 1.6; // Увеличиваем множитель на 1.6
-        }
+        clickCount++;
+        multiplier = multipliers[clickCount - 1];
+        updateNextMultiplier();
         gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
     }
 }
@@ -116,28 +123,17 @@ function cashOut() {
 
     const winAmount = currentBet * multiplier;
     balance += winAmount;
-    balanceElement.textContent = Math.floor(balance); // Отображаем баланс без дробной части
+    balanceElement.textContent = Math.floor(balance);
+    document.getElementById('coinSound').play();
     gameActive = false;
-    showWinMessage(`Вы выиграли: ${Math.floor(winAmount)} ₽`); // Показываем сообщение о выигрыше
-    resetGame(); // Сбрасываем игру после завершения
+    gameStatus.textContent = `Вы забрали ставку! Ваш выигрыш: ${Math.floor(winAmount)} ₽`;
+    resetGame();
 }
 
-function showWinMessage(message) {
-    const winMessage = document.createElement('div');
-    winMessage.className = 'win-message';
-    winMessage.textContent = message;
-    document.body.appendChild(winMessage);
-
-    // Анимация появления
-    setTimeout(() => {
-        winMessage.style.opacity = '1';
-    }, 10);
-
-    // Удаление сообщения через 3 секунды
-    setTimeout(() => {
-        winMessage.style.opacity = '0';
-        setTimeout(() => {
-            winMessage.remove();
-        }, 300);
-    }, 3000);
+function updateNextMultiplier() {
+    if (clickCount < multipliers.length) {
+        nextMultiplierValue.textContent = `${multipliers[clickCount].toFixed(2)}x`;
+    } else {
+        nextMultiplierValue.textContent = 'Максимальный множитель достигнут';
+    }
 }
