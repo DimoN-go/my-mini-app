@@ -20,12 +20,42 @@
             </div>
         </div>
     </header>
+
+    <!-- Главное меню -->
     <div class="main-menu" id="mainMenu">
         <h2>Мины</h2>
         <button onclick="startMinesGame()">Играть в Мины</button>
         <h2>Crash</h2>
         <button onclick="startCrashGame()">Играть в Crash</button>
     </div>
+
+    <!-- Игра Мины -->
+    <div class="game-container" id="minesGame" style="display: none;">
+        <button class="back-button" onclick="goBackToMenu()">Назад в меню</button>
+        <div class="mines-field" id="minesField"></div>
+        <div class="controls">
+            <input type="number" id="minesBetAmount" placeholder="Ставка" min="1">
+            <button onclick="placeMinesBet()">Сделать ставку</button>
+            <button onclick="cashOutMines()">Забрать ставку</button>
+        </div>
+        <div id="minesGameStatus"></div>
+    </div>
+
+    <!-- Игра Crash -->
+    <div class="game-container" id="crashGame" style="display: none;">
+        <button class="back-button" onclick="goBackToMenu()">Назад в меню</button>
+        <div class="rocket-container">
+            <div class="rocket" id="rocket"></div>
+            <div class="multiplier" id="multiplier">1.00x</div>
+        </div>
+        <div class="controls">
+            <input type="number" id="crashBetAmount" placeholder="Ставка" min="1">
+            <button onclick="placeCrashBet()">Сделать ставку</button>
+            <button id="cashOutButton" onclick="cashOutCrash()" disabled>Забрать: 0 ₽</button>
+        </div>
+        <div id="crashGameStatus"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
