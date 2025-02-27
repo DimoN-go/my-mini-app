@@ -6,12 +6,9 @@ let revealedCells = [];
 let gameActive = false;
 let clickCount = 0;
 
-// Множители по вашему списку
 const multipliers = [
-    0.08, 0.16, 0.32, 0.48, 0.64, 0.82, 1.07, 1.28, 1.53, 1.81,
-    2.16, 2.33, 2.71, 3.14, 3.58, 4.01, 4.41, 5.11, 5.76, 6.78,
-    7.34, 8.11, 9.23, 10.44, 12.11, 13.21, 15.34, 17.1, 19.56,
-    21.78, 24.11, 26.27, 30.43, 36.58
+    0.08, 0.16, 0.32, 0.64, 0.92, 1.21, 1.44, 1.67, 2.11, 3.21,
+    4.56, 6.85, 9.21, 11.43, 14.56, 18.41, 22.11, 26.78, 32.87, 40.44
 ];
 
 const balanceElement = document.getElementById('balance');
@@ -22,10 +19,6 @@ const minesField = document.getElementById('minesField');
 const betAmountInput = document.getElementById('betAmount');
 const gameStatus = document.getElementById('gameStatus');
 const nextMultiplierValue = document.getElementById('nextMultiplierValue');
-
-// Логика для контроля выигрышей и проигрышей
-let isFirstPhase = true; // Фаза, когда игрок выигрывает
-let targetStars = Math.floor(Math.random() * 8) + 8; // От 8 до 15 звезд
 
 function toggleBalancePopup() {
     balancePopup.style.display = balancePopup.style.display === 'block' ? 'none' : 'block';
@@ -55,8 +48,6 @@ function resetGame() {
     gameActive = false;
     clickCount = 0;
     multiplier = 1;
-    isFirstPhase = true;
-    targetStars = Math.floor(Math.random() * 8) + 8; // Новое количество звезд для выигрыша
     gameStatus.textContent = '';
     minesField.innerHTML = '';
     createMinesField();
@@ -108,61 +99,22 @@ function revealCell(index) {
     const cell = minesField.children[index];
     cell.classList.add('revealed');
 
-    if (isFirstPhase) {
-        // Фаза выигрыша (игрок набирает от 8 до 15 звезд)
-        if (clickCount < targetStars) {
-            cell.textContent = '⭐';
-            cell.classList.add('star');
-            document.getElementById('starSound').play();
-            revealedCells.push(index);
-            clickCount++;
-            multiplier = multipliers[clickCount - 1];
-            updateNextMultiplier();
-            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
-        } else {
-            // Переход к фазе проигрыша
-            isFirstPhase = false;
-            cell.textContent = '💣';
-            cell.classList.add('bomb');
-            document.getElementById('bombSound').play();
-            gameActive = false;
-            gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
-            showAllMines();
-            setTimeout(resetGame, 3000);
-        }
+    if (mines.includes(index)) {
+        cell.textContent = '💣';
+        cell.classList.add('bomb');
+        document.getElementById('bombSound').play();
+        gameActive = false;
+        gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
+        setTimeout(resetGame, 3000);
     } else {
-        // Фаза проигрыша (игрок натыкается на бомбу)
-        if (mines.includes(index)) {
-            cell.textContent = '💣';
-            cell.classList.add('bomb');
-            document.getElementById('bombSound').play();
-            gameActive = false;
-            gameStatus.textContent = `Вы нашли мину! Игра перезапустится через 3 секунды.`;
-            showAllMines();
-            setTimeout(resetGame, 3000);
-        } else {
-            cell.textContent = '⭐';
-            cell.classList.add('star');
-            document.getElementById('starSound').play();
-            revealedCells.push(index);
-            clickCount++;
-            multiplier = multipliers[clickCount - 1];
-            updateNextMultiplier();
-            gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
-        }
-    }
-}
-
-function showAllMines() {
-    for (let i = 0; i < 36; i++) {
-        const cell = minesField.children[i];
-        if (mines.includes(i)) {
-            cell.textContent = '💣';
-            cell.classList.add('bomb');
-        } else {
-            cell.textContent = '⭐';
-            cell.classList.add('star');
-        }
+        cell.textContent = '⭐';
+        cell.classList.add('star');
+        document.getElementById('starSound').play();
+        revealedCells.push(index);
+        clickCount++;
+        multiplier = multipliers[clickCount - 1];
+        updateNextMultiplier();
+        gameStatus.textContent = `Множитель: ${multiplier.toFixed(2)}x`;
     }
 }
 
